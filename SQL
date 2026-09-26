@@ -1,0 +1,28 @@
+SELECT
+  `Product Name`,
+  SUM(`Total Sales`) AS `Total Sales Product`,
+  (
+    SELECT AVG(`Total Sales Product`)
+    FROM (
+      SELECT
+        `Product Name`,
+        SUM(`Total Sales`) AS `Total Sales Product`
+      FROM `project-e48f5d78-a5e7-45de-a67.Ecommerce_Sales.Ecommerce`
+      GROUP BY `Product Name`
+    )
+  ) AS `Average Sales`
+FROM `project-e48f5d78-a5e7-45de-a67.Ecommerce_Sales.Ecommerce`
+GROUP BY `Product Name`
+HAVING SUM(`Total Sales`) >
+(
+  SELECT AVG(`Total Sales Product`)
+  FROM (
+    SELECT
+      `Product Name`,
+      SUM(`Total Sales`) AS `Total Sales Product`
+    FROM `project-e48f5d78-a5e7-45de-a67.Ecommerce_Sales.Ecommerce`
+    GROUP BY `Product Name`
+  )
+)
+ORDER BY `Total Sales Product` DESC
+LIMIT 5;
